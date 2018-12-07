@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">FMCS</string>
+    <string-array name="category">
+        <item>Food &amp; Drinks</item>
+        <item>Health</item>
+        <item>Transportation</item>
+        <item>Other</item>
+    </string-array>
 </resources>
