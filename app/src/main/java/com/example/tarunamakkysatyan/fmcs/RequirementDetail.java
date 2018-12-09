@@ -17,7 +17,6 @@ public class RequirementDetail extends AppCompatActivity {
         editAmount = findViewById(R.id.editAmount);
         Intent req = getIntent();
         Bundle bundle = req.getExtras();
-        req.putExtras(bundle);
         editName.setText(bundle.getString("name"));
         editCategory.setText(bundle.getString("category"));
         editAmount.setText(bundle.getString("money"));
