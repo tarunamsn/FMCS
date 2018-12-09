@@ -6,4 +6,6 @@
         <item>Transportation</item>
         <item>Other</item>
     </string-array>
+    <string name="title_transaction">Trans.</string>
+    <string name="title_setting">Setting</string>
 </resources>
