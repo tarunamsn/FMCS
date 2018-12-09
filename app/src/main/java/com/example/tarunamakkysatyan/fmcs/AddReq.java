@@ -14,6 +14,6 @@ public class AddReq extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(pop);
         int w = pop.widthPixels;
         int h = pop.heightPixels;
-        getWindow().setLayout((int)(w*.8), (int)(h*.6));
+        getWindow().setLayout((int)(w*.9), (int)(h*.8));
     }
 }
