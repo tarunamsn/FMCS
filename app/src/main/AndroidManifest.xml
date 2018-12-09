@@ -18,5 +18,6 @@
         </activity>
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".AddReq" android:theme="@style/AppTheme.CustomTheme"></activity>
+        <activity android:name=".RequirementDetail"></activity>
     </application>
 </manifest>

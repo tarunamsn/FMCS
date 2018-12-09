@@ -2,6 +2,7 @@ package com.example.tarunamakkysatyan.fmcs;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>{
+public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>  {
 
     LayoutInflater mInflater;
     ArrayList<Transaction> TransactionArrayList;
@@ -46,7 +47,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         return TransactionArrayList.size();
     }
 
-    class TransactionViewHolder extends RecyclerView.ViewHolder{
+
+
+    class TransactionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView txtHour, txtDate, txtCategory,txtName, txtMoney;
         TransactionAdapter mAdapter;
         public TransactionViewHolder(@NonNull View itemView, TransactionAdapter transactionAdapter) {
@@ -57,7 +60,18 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             txtName = itemView.findViewById(R.id.txtName);
             txtMoney = itemView.findViewById(R.id.txtMoney);
             this.mAdapter = transactionAdapter;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent req = new Intent(_context, RequirementDetail.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("name", txtName.getText().toString());
+            bundle.putString("category", txtCategory.getText().toString());
+            bundle.putString("money", txtMoney.getText().toString());
+            req.putExtras(bundle);
+            _context.startActivity(req);
         }
     }
-
 }
