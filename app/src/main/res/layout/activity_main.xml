@@ -127,8 +127,19 @@
             android:layout_gravity="bottom|right"
             android:layout_margin="16dp"
             android:src="@drawable/outline_add_white_18dp"
-            app:layout_anchor="@id/RecyclerView"
-            app:layout_anchorGravity="bottom|right|end" />
+            app:layout_anchor="@+id/RecyclerView"
+            app:layout_anchorGravity="right|top" />
+
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:itemIconTint="@android:color/white"
+            app:itemTextColor="@android:color/white"
+            app:layout_anchor="@+id/RecyclerView"
+            app:layout_anchorGravity="bottom|center"
+            app:menu="@menu/navigation" />
 
     </android.support.design.widget.CoordinatorLayout>
 
