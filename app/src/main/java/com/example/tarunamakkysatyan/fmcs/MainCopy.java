@@ -20,6 +20,7 @@ public class MainCopy extends AppCompatActivity {
         setContentView(R.layout.activity_main_copy);
         bottomNavigationView = findViewById(R.id.btmNavView);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        loadFragment(ListTransFragment.newInstance("0","0"));
     }
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -28,11 +29,12 @@ public class MainCopy extends AppCompatActivity {
             Fragment fragment;
             switch (item.getItemId()) {
                 case R.id.navigation_setting:
-                    ListTransFragment a = ListTransFragment.newInstance("0","0");
-//                    loadFragment(fragment);
+                    fragment= SettingFragment.newInstance("0","0");
+                    loadFragment(fragment);
                     return true;
                 case R.id.navigation_transaction:
-
+                    fragment= ListTransFragment.newInstance("0","0");
+                    loadFragment(fragment);
                     return true;
             }
             return false;

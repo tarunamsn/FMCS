@@ -1,10 +1,9 @@
 package com.example.tarunamakkysatyan.fmcs;
 
-
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,6 +32,7 @@ public class ListTransFragment extends Fragment implements View.OnClickListener 
     RecyclerView.Adapter mAdapter;
     TextView expenses, total,income;
     FloatingActionButton btnAdd;
+    ArrayList<Transaction> TransactionList= new ArrayList<>();
 
     public ListTransFragment() {
         // Required empty public constructor
@@ -63,6 +63,12 @@ public class ListTransFragment extends Fragment implements View.OnClickListener 
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        TransactionList.add(new Transaction("Fried Rice","Food & Drink","21 February","22:59",true,16000));
+        TransactionList.add(new Transaction("Ultra Milk","Food & Drink","21 February","23:00",true,6000));
+        TransactionList.add(new Transaction("Gym","Health","22 February","12:00",true, 15000));
+        TransactionList.add(new Transaction("Pizza","Food & Drink","22 February","15:00",true,40000));
+        TransactionList.add(new Transaction("Train to Surabaya","Transportation","22 February","18:00",true,20000));
+        TransactionList.add(new Transaction("Earphone","Other","22 February","18:01",true,140000));
     }
 
     @Override
@@ -70,13 +76,6 @@ public class ListTransFragment extends Fragment implements View.OnClickListener 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View ViewFrag = inflater.inflate(R.layout.fragment_list_trans, container, false);
-        ArrayList<Transaction> TransactionList= new ArrayList<>();
-        TransactionList.add(new Transaction("Fried Rice","Food & Drink","21 February","22:59",true,16000));
-        TransactionList.add(new Transaction("Ultra Milk","Food & Drink","21 February","23:00",true,6000));
-        TransactionList.add(new Transaction("Gym","Health","22 February","12:00",true, 15000));
-        TransactionList.add(new Transaction("Pizza","Food & Drink","22 February","15:00",true,40000));
-        TransactionList.add(new Transaction("Train to Surabaya","Transportation","22 February","18:00",true,20000));
-        TransactionList.add(new Transaction("Earphone","Other","22 February","18:01",true,140000));
         int a=0;
         for (int i  =0;i<TransactionList.size();i++){
             Transaction temp = TransactionList.get(i);
