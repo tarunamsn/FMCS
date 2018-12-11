@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,8 +33,13 @@ public class RequirementDetail extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View view) {
         Intent resultIntent = getIntent();
-        //Intent resultIntent = new Intent();
-        setResult(RESULT_OK, resultIntent); //status ok akan saya respon dengan data di resultIntent
-        finish(); // akhiri aktivity ini dan kembali ke activity sebelumnya
+        Bundle bundle = resultIntent.getExtras();;
+        bundle.putString("content",editName.getText().toString());
+        bundle.putString("category",editCategory.getText().toString());
+        bundle.putString("amount",editAmount.getText().toString());
+        Log.d("index : ", ((Integer) bundle.getInt("index")).toString());
+        resultIntent.putExtras(bundle);
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 }

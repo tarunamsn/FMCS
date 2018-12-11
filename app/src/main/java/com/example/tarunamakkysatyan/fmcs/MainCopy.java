@@ -41,7 +41,7 @@ public class MainCopy extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_setting:
                     fragment= SettingFragment.newInstance("0","0");
-                        loadFragment(fragment);
+                    loadFragment(fragment);
                     return true;
                 case R.id.navigation_transaction:
                     fragment= ListTransFragment.newInstance(TransactionList,"0");
@@ -52,7 +52,6 @@ public class MainCopy extends AppCompatActivity {
         }
     };
     private void loadFragment(Fragment fragment) {
-        // load fragment
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.frameContainer, fragment);
         transaction.addToBackStack(null);
@@ -62,6 +61,8 @@ public class MainCopy extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        TransactionList.remove(data.getExtras().getInt("index"));
+        loadFragment(ListTransFragment.newInstance(TransactionList,"0"));
         Log.d("req code activity : ", ((Integer) requestCode).toString());
     }
 }
