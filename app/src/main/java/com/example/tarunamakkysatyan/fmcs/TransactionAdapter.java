@@ -1,5 +1,6 @@
 package com.example.tarunamakkysatyan.fmcs;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -71,8 +72,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             bundle.putString("category", txtCategory.getText().toString());
             bundle.putString("money", txtMoney.getText().toString());
             req.putExtras(bundle);
-            _context.startActivity(req);
-
+            ((Activity)_context).startActivityForResult(req,121);
         }
+
     }
 }

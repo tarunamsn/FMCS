@@ -93,7 +93,6 @@ public class ListTransFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
-        Log.d("jancuk", ((Integer) view.getId()).toString());
         Intent pop = new Intent(view.getContext(), AddReq.class);
         startActivityForResult(pop,101);
     }
@@ -101,8 +100,23 @@ public class ListTransFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d("request code : ", ((Integer) requestCode).toString());
+        String date, hour, content, category;
+        int amount =0;
+        Bundle bundle = data.getExtras();
+        date = bundle.getString("date");
+        hour = bundle.getString("hour");
+        content = bundle.getString("content");
+        category = bundle.getString("category");
+        try{
+            amount = Integer.parseInt(bundle.getString("amount"));
+        }catch (Exception e){
+
+        }
+        System.out.println(hour);
         if (requestCode == 101){
-            TransactionList.add(new Transaction("Fried Rice","Food & Drink","21 February","22:59",true,16000));
+            TransactionList.add(new Transaction(content,category,date,hour,true,amount));
+            mAdapter.notifyDataSetChanged();
         }
     }
 }
