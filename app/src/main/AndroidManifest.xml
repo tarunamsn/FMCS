@@ -12,12 +12,15 @@
         <activity android:name=".Register">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".AddReq" android:theme="@style/AppTheme.CustomTheme"></activity>
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".AddReq"
+            android:theme="@style/AppTheme.CustomTheme" />
         <activity android:name=".RequirementDetail"></activity>
+        <activity android:name=".MainCopy"></activity>
     </application>
+
 </manifest>
