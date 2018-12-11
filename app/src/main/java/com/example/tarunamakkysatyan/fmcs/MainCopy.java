@@ -61,8 +61,13 @@ public class MainCopy extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        TransactionList.remove(data.getExtras().getInt("index"));
-        loadFragment(ListTransFragment.newInstance(TransactionList,"0"));
-        Log.d("req code activity : ", ((Integer) requestCode).toString());
+        try{
+            TransactionList.remove(data.getExtras().getInt("index"));
+            loadFragment(ListTransFragment.newInstance(TransactionList,"0"));
+            Log.d("req code activity : ", ((Integer) requestCode).toString());
+        }catch (Exception e){
+
+        }
+
     }
 }
