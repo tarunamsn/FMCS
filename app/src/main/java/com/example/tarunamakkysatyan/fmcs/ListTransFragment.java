@@ -93,7 +93,7 @@ public class ListTransFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
-        Log.d("jancuk", ((Integer) view.getId()).toString());
+        Log.d("BOB, DO SOMETHIN'!!!", ((Integer) view.getId()).toString());
         Intent pop = new Intent(view.getContext(), AddReq.class);
         startActivityForResult(pop,101);
     }

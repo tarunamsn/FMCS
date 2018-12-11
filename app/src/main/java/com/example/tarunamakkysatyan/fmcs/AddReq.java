@@ -19,7 +19,7 @@ public class AddReq extends AppCompatActivity implements View.OnClickListener{
         int w = pop.widthPixels;
         int h = pop.heightPixels;
         getWindow().setLayout((int)(w*.9), (int)(h*.8));
-        btn = findViewById(R.id.btnSave);
+        btn = findViewById(R.id.buttonSave);
         btn.setOnClickListener(this);
     }
 
