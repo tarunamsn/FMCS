@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView.Adapter mAdapter;
     TextView expenses, total,income;
     FloatingActionButton btnAdd;
+    Intent a;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

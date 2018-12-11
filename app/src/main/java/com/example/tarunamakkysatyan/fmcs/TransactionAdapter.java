@@ -72,6 +72,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             bundle.putString("money", txtMoney.getText().toString());
             req.putExtras(bundle);
             _context.startActivity(req);
+
         }
     }
 }

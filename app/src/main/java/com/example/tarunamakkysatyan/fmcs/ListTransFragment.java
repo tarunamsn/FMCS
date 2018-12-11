@@ -4,8 +4,10 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,14 +28,12 @@ public class ListTransFragment extends Fragment implements View.OnClickListener 
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
     private String mParam2;
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
     TextView expenses, total,income;
     FloatingActionButton btnAdd;
     ArrayList<Transaction> TransactionList= new ArrayList<>();
-
     public ListTransFragment() {
         // Required empty public constructor
     }
@@ -47,10 +47,10 @@ public class ListTransFragment extends Fragment implements View.OnClickListener 
      * @return A new instance of fragment ListTransFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ListTransFragment newInstance(String param1, String param2) {
+    public static ListTransFragment newInstance(ArrayList<Transaction> param1, String param2) {
         ListTransFragment fragment = new ListTransFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putParcelableArrayList(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -60,15 +60,9 @@ public class ListTransFragment extends Fragment implements View.OnClickListener 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            TransactionList = getArguments().getParcelableArrayList(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        TransactionList.add(new Transaction("Fried Rice","Food & Drink","21 February","22:59",true,16000));
-        TransactionList.add(new Transaction("Ultra Milk","Food & Drink","21 February","23:00",true,6000));
-        TransactionList.add(new Transaction("Gym","Health","22 February","12:00",true, 15000));
-        TransactionList.add(new Transaction("Pizza","Food & Drink","22 February","15:00",true,40000));
-        TransactionList.add(new Transaction("Train to Surabaya","Transportation","22 February","18:00",true,20000));
-        TransactionList.add(new Transaction("Earphone","Other","22 February","18:01",true,140000));
     }
 
     @Override
@@ -99,7 +93,16 @@ public class ListTransFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
+        Log.d("jancuk", ((Integer) view.getId()).toString());
         Intent pop = new Intent(view.getContext(), AddReq.class);
-        startActivity(pop);
+        startActivityForResult(pop,101);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101){
+            TransactionList.add(new Transaction("Fried Rice","Food & Drink","21 February","22:59",true,16000));
+        }
     }
 }

@@ -56,7 +56,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                     preferencesEditor.putBoolean("checked", rememberCb.isChecked());
                     preferencesEditor.commit();
                 }
-                Intent obj = new Intent(this,MainActivity.class);
+                Intent obj = new Intent(this,MainCopy.class);
                 startActivity(obj);
             } else  {
                 String msg = "INCORRECT PASSWORD!";
