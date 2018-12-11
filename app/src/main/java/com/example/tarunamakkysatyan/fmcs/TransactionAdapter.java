@@ -1,5 +1,6 @@
 package com.example.tarunamakkysatyan.fmcs;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     ArrayList<Transaction> TransactionArrayList;
     Context _context;
     Transaction current;
+    int index;
 
     public TransactionAdapter(Context _context, ArrayList<Transaction> TransactionArrayList ) {
         this.mInflater = LayoutInflater.from(_context);
@@ -39,6 +41,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         transactionViewHolder.txtDate.setText(current.hour);
         transactionViewHolder.txtName.setText(current.name);
         transactionViewHolder.txtCategory.setText(current.category);
+        index = i;
         transactionViewHolder.txtMoney.setText("Rp. "+ ((Integer) current.money).toString());
     }
 
@@ -70,9 +73,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             bundle.putString("name", txtName.getText().toString());
             bundle.putString("category", txtCategory.getText().toString());
             bundle.putString("money", txtMoney.getText().toString());
+            bundle.putInt("index", getAdapterPosition());
             req.putExtras(bundle);
-            _context.startActivity(req);
-
+            ((Activity)_context).startActivityForResult(req,121);
         }
     }
 }
