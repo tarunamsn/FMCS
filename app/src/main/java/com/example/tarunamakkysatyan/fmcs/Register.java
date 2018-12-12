@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
-    EditText usernameTxt, passwordTxt, budgetTxt;
+    EditText usernameTxt, passwordTxt;
     Button btnSubmit;
     CheckBox rememberCb;
     SharedPreferences mPreferences;
@@ -25,7 +25,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
         usernameTxt = findViewById(R.id.usernameTxt);
         passwordTxt = findViewById(R.id.passwordTxt);
-        budgetTxt = findViewById(R.id.budgetTxt);
         if (mPreferences.getBoolean("checked", false)){
             usernameTxt.setText(mPreferences.getString("count",""));
             passwordTxt.setText(mPreferences.getString("count1",""));
@@ -48,18 +47,21 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 SharedPreferences.Editor preferencesEditor = mPreferences.edit();
                 Log.d("b", "onClick: " + usernameTxt.getText().toString());
                 mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-                preferencesEditor.putString("count", usernameTxt.getText().toString());
-                preferencesEditor.putString("count1", passwordTxt.getText().toString());
                 if (rememberCb.isChecked()) {
+                    preferencesEditor.putString("count", usernameTxt.getText().toString());
+                    preferencesEditor.putString("count1", passwordTxt.getText().toString());
                     Log.d("c", "onClick: " + rememberCb.isChecked());
-                    mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+//                    mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
                     preferencesEditor.putBoolean("checked", rememberCb.isChecked());
                     preferencesEditor.commit();
+                }else {
+
                 }
                 Intent obj = new Intent(this,MainCopy.class);
                 startActivity(obj);
             } else  {
-                String msg = "INCORRECT PASSWORD!";
+                String msg = "Incorrect Password" +
+                        "!";
                 Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
             }
         }

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>  {
 
@@ -70,9 +71,17 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         public void onClick(View v) {
             Intent req = new Intent(_context, RequirementDetail.class);
             Bundle bundle = new Bundle();
+            String amount = txtMoney.getText().toString();
+            StringTokenizer tokenizer = new StringTokenizer(amount," ");
+            while (tokenizer.hasMoreTokens()){
+                amount = tokenizer.nextToken();
+            }
+            bundle.putBoolean("expenses",TransactionArrayList.get(getAdapterPosition()).expenses);
             bundle.putString("name", txtName.getText().toString());
             bundle.putString("category", txtCategory.getText().toString());
-            bundle.putString("money", txtMoney.getText().toString());
+            bundle.putString("money", amount);
+            bundle.putString("date", txtDate.getText().toString());
+            bundle.putString("hour", txtHour.getText().toString());
             bundle.putInt("index", getAdapterPosition());
             req.putExtras(bundle);
             ((Activity)_context).startActivityForResult(req,121);

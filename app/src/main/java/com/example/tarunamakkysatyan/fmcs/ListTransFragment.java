@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -70,24 +71,51 @@ public class ListTransFragment extends Fragment implements View.OnClickListener 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View ViewFrag = inflater.inflate(R.layout.fragment_list_trans, container, false);
-        int a=0;
+        int a=0, b=0;
+        Transaction temp;
         for (int i  =0;i<TransactionList.size();i++){
-            Transaction temp = TransactionList.get(i);
-            a += temp.money;
+             temp= TransactionList.get(i);
+            if (TransactionList.get(i).expenses== true){
+                a += temp.money;
+            }else {
+                b += temp.money;
+            }
         }
         expenses = ViewFrag.findViewById(R.id.textView5);
         expenses.setText(("Rp. "+ (Integer) a).toString());
         income = ViewFrag.findViewById(R.id.textView4);
-        income.setText("Rp. 0 ");
-        int temp = 0-a;
+        income.setText("Rp. "+ ((Integer) b).toString());
+        int tot = b-a;
         total = ViewFrag.findViewById(R.id.textView6);
-        total.setText(("Rp. "+ (Integer) temp).toString());
+        total.setText(("Rp. "+ (Integer) tot).toString());
         mRecyclerView = ViewFrag.findViewById(R.id.RecyclerView);
         mAdapter = new TransactionAdapter(ViewFrag.getContext(), TransactionList);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(ViewFrag.getContext()));
         btnAdd = ViewFrag.findViewById(R.id.btnAdd);
         btnAdd.setOnClickListener(this);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            /**
+             * Callback method to be invoked when the RecyclerView has been scrolled. This will be
+             * called after the scroll has completed.
+             * <p>
+             * This callback will also be called if visible item range changes after a layout
+             * calculation. In that case, dx and dy will be 0.
+             *
+             * @param recyclerView The RecyclerView which scrolled.
+             * @param dx           The amount of horizontal scroll.
+             * @param dy           The amount of vertical scroll.
+             */
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && btnAdd.getVisibility() == View.VISIBLE) {
+                    btnAdd.hide();
+                } else if (dy < 0 && btnAdd.getVisibility() != View.VISIBLE) {
+                    btnAdd.show();
+                }
+            }
+        });
         return ViewFrag;
     }
 
@@ -99,24 +127,44 @@ public class ListTransFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d("request code : ", ((Integer) requestCode).toString());
-        String date, hour, content, category;
-        int amount =0;
-        Bundle bundle = data.getExtras();
-        date = bundle.getString("date");
-        hour = bundle.getString("hour");
-        content = bundle.getString("content");
-        category = bundle.getString("category");
         try{
+            super.onActivityResult(requestCode, resultCode, data);
+            Log.d("request code : ", ((Integer) requestCode).toString());
+            String date, hour, content, category;
+            int amount =0;
+            Bundle bundle = data.getExtras();
+            date = bundle.getString("date");
+            hour = bundle.getString("hour");
+            content = bundle.getString("content");
+            category = bundle.getString("category");
+            boolean expenses = bundle.getBoolean("expenses");
             amount = Integer.parseInt(bundle.getString("amount"));
-        }catch (Exception e){
+            TransactionList.add(new Transaction(content,category,date,hour,expenses,amount));
+            mAdapter.notifyDataSetChanged();
+        }catch (NumberFormatException e){
+            String msg = "Field must not be empty!";
+            Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+        }catch (NullPointerException e){
 
         }
-        System.out.println(hour);
-        if (requestCode == 101){
-            TransactionList.add(new Transaction(content,category,date,hour,true,amount));
-            mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        int a=0, b=0;
+        Transaction temp;
+        for (int i  =0;i<TransactionList.size();i++){
+            temp= TransactionList.get(i);
+            if (TransactionList.get(i).expenses== true){
+                a += temp.money;
+            }else if (TransactionList.get(i).expenses == false){
+                b += temp.money;
+            }
         }
+        expenses.setText(("Rp. "+ (Integer) a).toString());
+        income.setText("Rp. "+ ((Integer) b).toString());
+        int tot = b-a;
+        total.setText(("Rp. "+ (Integer) tot).toString());
     }
 }

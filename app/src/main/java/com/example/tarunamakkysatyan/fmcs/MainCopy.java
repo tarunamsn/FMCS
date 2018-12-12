@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -30,7 +31,7 @@ public class MainCopy extends AppCompatActivity {
         TransactionList.add(new Transaction("Gym","Health","22 February","12:00",true, 15000));
         TransactionList.add(new Transaction("Pizza","Food & Drink","22 February","15:00",true,40000));
         TransactionList.add(new Transaction("Train to Surabaya","Transportation","22 February","18:00",true,20000));
-        TransactionList.add(new Transaction("Earphone","Other","22 February","18:01",true,140000));
+        TransactionList.add(new Transaction("Earphone","Other","22 February","18:01",false,140000));
         loadFragment(ListTransFragment.newInstance(TransactionList,"0"));
     }
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -61,8 +62,25 @@ public class MainCopy extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        TransactionList.remove(data.getExtras().getInt("index"));
-        loadFragment(ListTransFragment.newInstance(TransactionList,"0"));
-        Log.d("req code activity : ", ((Integer) requestCode).toString());
+//        Log.d("Button ", ((Boolean) data.getExtras().getBoolean("button")).toString());
+        try{
+            if (data.getExtras().getBoolean("button")==true){
+                TransactionList.remove(data.getExtras().getInt("index"));
+            }
+            else {
+                String content, amount, category, date, hour;
+                content = data.getExtras().getString("content");
+                amount = data.getExtras().getString("amount");
+                category = data.getExtras().getString("category");
+                date = data.getExtras().getString("date");
+                hour = data.getExtras().getString("hour");
+                TransactionList.set(data.getExtras().getInt("index"),new Transaction(content,category,hour,date,true,Integer.parseInt(amount)));
+            }
+            loadFragment(ListTransFragment.newInstance(TransactionList,"0"));
+            Log.d("req code activity : ", ((Integer) requestCode).toString());
+        }catch (NullPointerException e){
+//            String msg = "INCORRECT PASSWORD!";
+//            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+        }
     }
 }

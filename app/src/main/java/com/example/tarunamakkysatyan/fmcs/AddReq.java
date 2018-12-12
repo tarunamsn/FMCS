@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import java.text.ParseException;
@@ -20,6 +22,9 @@ public class AddReq extends AppCompatActivity implements View.OnClickListener{
     Button btn;
     EditText editAmount, editContent;
     Spinner spinner;
+    RadioGroup radioGroup;
+    RadioButton radioButton;
+    boolean expenses;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +39,23 @@ public class AddReq extends AppCompatActivity implements View.OnClickListener{
         editAmount = findViewById(R.id.editAmount);
         editContent = findViewById(R.id.editContent);
         spinner = findViewById(R.id.spinner);
+        radioGroup = findViewById(R.id.radioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case R.id.radioButton2:
+                        expenses = true;
+                        spinner.setEnabled(true);
+                        break;
+                    case R.id.radioButton:
+                        expenses = false;
+                        spinner.setSelection(3);
+                        spinner.setEnabled(false);
+                        break;
+                }
+            }
+        });
     }
 
     @Override
@@ -53,6 +75,7 @@ public class AddReq extends AppCompatActivity implements View.OnClickListener{
         bundle.putString("date", date);
         bundle.putString("hour", hour);
         bundle.putString("category",spinner.getSelectedItem().toString());
+        bundle.putBoolean("expenses",expenses);
         resultIntent.putExtras(bundle);
         setResult(RESULT_OK, resultIntent);
         finish();
