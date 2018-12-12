@@ -25,13 +25,17 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
         usernameTxt = findViewById(R.id.usernameTxt);
         passwordTxt = findViewById(R.id.passwordTxt);
+        rememberCb = findViewById(R.id.rememberCb);
         if (mPreferences.getBoolean("checked", false)){
             usernameTxt.setText(mPreferences.getString("count",""));
             passwordTxt.setText(mPreferences.getString("count1",""));
+            rememberCb.setChecked(true);
+        }else{
+            usernameTxt.getText().clear();
+            usernameTxt.getText().clear();
         }
         btnSubmit = findViewById(R.id.btnSubmit);
         btnSubmit.setOnClickListener(this);
-        rememberCb = findViewById(R.id.rememberCb);
         rememberCb.setOnClickListener(this);
     }
 
@@ -50,12 +54,11 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 if (rememberCb.isChecked()) {
                     preferencesEditor.putString("count", usernameTxt.getText().toString());
                     preferencesEditor.putString("count1", passwordTxt.getText().toString());
-                    Log.d("c", "onClick: " + rememberCb.isChecked());
-//                    mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
                     preferencesEditor.putBoolean("checked", rememberCb.isChecked());
                     preferencesEditor.commit();
                 }else {
-
+                    preferencesEditor.putBoolean("checked", rememberCb.isChecked());
+                    preferencesEditor.commit();
                 }
                 Intent obj = new Intent(this,MainCopy.class);
                 startActivity(obj);
