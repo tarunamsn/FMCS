@@ -26,6 +26,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         usernameTxt = findViewById(R.id.usernameTxt);
         passwordTxt = findViewById(R.id.passwordTxt);
         rememberCb = findViewById(R.id.rememberCb);
+        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
         if (mPreferences.getBoolean("checked", false)){
             usernameTxt.setText(mPreferences.getString("count",""));
             passwordTxt.setText(mPreferences.getString("count1",""));
@@ -41,11 +42,10 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        Log.d("a", "onClick: " + usernameTxt.getText().toString() );
-        Log.d("b", "onClick: " + passwordTxt.getText().toString() );
-        String a = usernameTxt.getText().toString();
-        String b = passwordTxt.getText().toString();
+
         if (v.getId() == R.id.btnSubmit) {
+            String a = usernameTxt.getText().toString();
+            String b = passwordTxt.getText().toString();
             Log.d("a", "onClick: Clicked" );
             if (a.equalsIgnoreCase("admin") && b.equalsIgnoreCase("admin")) {
                 SharedPreferences.Editor preferencesEditor = mPreferences.edit();
@@ -67,7 +67,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                         "!";
                 Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
             }
+            finish();
         }
-        finish();
     }
 }

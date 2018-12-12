@@ -90,4 +90,9 @@ public class SettingFragment extends Fragment {
         return ViewFrag;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        cbNotif.setChecked(notif);
+    }
 }
