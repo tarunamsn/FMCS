@@ -1,11 +1,14 @@
 package com.example.tarunamakkysatyan.fmcs;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 
 
 /**
@@ -23,6 +26,9 @@ public class SettingFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    CheckBox cbNotif;
+    Button logoutBt;
+    static Boolean notif = false;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -59,7 +65,29 @@ public class SettingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_setting, container, false);
+        final View ViewFrag = inflater.inflate(R.layout.fragment_setting, container, false);
+        cbNotif = ViewFrag.findViewById(R.id.cbNotif);
+        cbNotif.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cbNotif.isChecked()){
+                    notif = true;
+                } else
+                    notif = false;
+            }
+        });
+        logoutBt = ViewFrag.findViewById(R.id.logoutBt);
+        logoutBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view.getId() == R.id.logoutBt){
+                    Intent log = new Intent(view.getContext(), Register.class);
+                    startActivity(log);
+                    getActivity().finish();
+                }
+            }
+        });
+        return ViewFrag;
     }
 
 }

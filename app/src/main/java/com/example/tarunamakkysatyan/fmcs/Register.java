@@ -62,5 +62,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
             }
         }
+        finish();
     }
 }
