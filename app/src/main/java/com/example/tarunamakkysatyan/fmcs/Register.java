@@ -47,18 +47,21 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 SharedPreferences.Editor preferencesEditor = mPreferences.edit();
                 Log.d("b", "onClick: " + usernameTxt.getText().toString());
                 mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-                preferencesEditor.putString("count", usernameTxt.getText().toString());
-                preferencesEditor.putString("count1", passwordTxt.getText().toString());
                 if (rememberCb.isChecked()) {
+                    preferencesEditor.putString("count", usernameTxt.getText().toString());
+                    preferencesEditor.putString("count1", passwordTxt.getText().toString());
                     Log.d("c", "onClick: " + rememberCb.isChecked());
-                    mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+//                    mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
                     preferencesEditor.putBoolean("checked", rememberCb.isChecked());
                     preferencesEditor.commit();
+                }else {
+
                 }
                 Intent obj = new Intent(this,MainCopy.class);
                 startActivity(obj);
             } else  {
-                String msg = "INCORRECT PASSWORD!";
+                String msg = "Incorrect Password" +
+                        "!";
                 Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
             }
         }

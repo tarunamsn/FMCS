@@ -18,6 +18,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -30,38 +32,45 @@ public class AddReq extends AppCompatActivity implements View.OnClickListener{
     Button btn;
     EditText editAmount, editContent;
     Spinner spinner;
-    NotificationManager mNotifyManager;
+    RadioGroup radioGroup;
+    RadioButton radioButton;
+    boolean expenses;
+//    NotificationManager mNotifyManager;
+//
+//    private BroadcastReceiver rc = new BroadcastReceiver() {
+//        @RequiresApi(api = Build.VERSION_CODES.O)
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            NotificationCompat.Builder mNotifyBuilder;
+//            Log.d("receivenot", "run");
+//            Log.d("Total : ", ((Integer) ListTransFragment.balance).toString());
+//            if (ListTransFragment.balance <= 0) {
+//                Toast.makeText(context, "The requirement you entered exceeds the budget you have set.",
+//                        Toast.LENGTH_LONG).show();
+//
+//                NotificationChannel mChannel = new NotificationChannel("idn", "fmcs",
+//                        NotificationManager.IMPORTANCE_DEFAULT);
+//
+//                mNotifyBuilder = new NotificationCompat.Builder(context).setContentTitle("FMCS")
+//                        .setContentText("REQUIREMENT EXCEEDS YOUR BUDGET.")
+//                        .setSmallIcon(R.drawable.awarning)
+//                        .setChannelId("idn");
+//                if (SettingFragment.notif == true) {
+//                    Notification myNotification = mNotifyBuilder.build();
+//                    mNotifyManager.notify(0,  myNotification);
+//                    mNotifyManager.createNotificationChannel(mChannel);
+//                }
+//            }
+//        }
+//    };
 
-    private BroadcastReceiver rc = new BroadcastReceiver() {
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            NotificationCompat.Builder mNotifyBuilder;
-            Log.d("receivenot", "run");
-            Toast.makeText(context, "The requirement you entered exceeds the budget you have set.",
-                    Toast.LENGTH_LONG).show();
-
-            NotificationChannel mChannel = new NotificationChannel("idn", "fmcs", NotificationManager.IMPORTANCE_DEFAULT);
-
-            mNotifyBuilder = new NotificationCompat.Builder(context).setContentTitle("FMCS")
-                    .setContentText("The requirement you entered exceeds the budget you have set.")
-                    .setSmallIcon(R.drawable.awarning)
-            .setChannelId("idn");
-            if (SettingFragment.notif == true) {
-                Notification myNotification = mNotifyBuilder.build();
-                mNotifyManager.notify(0,  myNotification);
-                mNotifyManager.createNotificationChannel(mChannel);
-            }
-        }
-    };
-
-    @Override
-    protected void onResume() {
-        IntentFilter fl = new IntentFilter();
-        fl.addAction("com.cfsuman.RANDOM_NUMBER_INTENT");
-        registerReceiver(rc, fl);
-        super.onResume();
-    }
+//    @Override
+//    protected void onResume() {
+//        IntentFilter fl = new IntentFilter();
+//        fl.addAction("com.cfsuman.RANDOM_NUMBER_INTENT");
+//        registerReceiver(rc, fl);
+//        super.onResume();
+//    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,8 +86,25 @@ public class AddReq extends AppCompatActivity implements View.OnClickListener{
         editAmount = findViewById(R.id.editAmount);
         editContent = findViewById(R.id.editContent);
         spinner = findViewById(R.id.spinner);
-        mNotifyManager = (NotificationManager)
-                getSystemService(NOTIFICATION_SERVICE);
+        radioGroup = findViewById(R.id.radioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case R.id.radioButton2:
+                        expenses = true;
+                        spinner.setEnabled(true);
+                        break;
+                    case R.id.radioButton:
+                        expenses = false;
+                        spinner.setSelection(3);
+                        spinner.setEnabled(false);
+                        break;
+                }
+            }
+        });
+//        mNotifyManager = (NotificationManager)
+//                getSystemService(NOTIFICATION_SERVICE);
     }
 
     @Override
@@ -92,17 +118,18 @@ public class AddReq extends AppCompatActivity implements View.OnClickListener{
         String hour = format1.format(curDate1);
         Log.d("date :",date);
         Log.d("hour :",hour);
-        Intent in = new Intent();
-        in.setAction("com.cfsuman.RANDOM_NUMBER_INTENT");
-        in.putExtra("data", "The requirement you entered exceeds the budget you have set.");
-        Log.d("receivenot", "send");
-        sendBroadcast(in);
+//        Intent in = new Intent();
+//        in.setAction("com.cfsuman.RANDOM_NUMBER_INTENT");
+//        in.putExtra("data", "The requirement you entered exceeds the budget you have set.");
+//        Log.d("receivenot", "send");
+//        sendBroadcast(in);
         Bundle bundle = new Bundle();
         bundle.putString("content", editContent.getText().toString());
         bundle.putString("amount", editAmount.getText().toString());
         bundle.putString("date", date);
         bundle.putString("hour", hour);
         bundle.putString("category",spinner.getSelectedItem().toString());
+        bundle.putBoolean("expenses",expenses);
         resultIntent.putExtras(bundle);
         setResult(RESULT_OK, resultIntent);
         finish();

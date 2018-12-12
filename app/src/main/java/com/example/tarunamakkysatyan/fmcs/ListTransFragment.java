@@ -1,9 +1,18 @@
 package com.example.tarunamakkysatyan.fmcs;
 
 import android.app.Fragment;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,8 +21,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 
 /**
@@ -34,6 +46,36 @@ public class ListTransFragment extends Fragment implements View.OnClickListener 
     TextView expenses, total,income;
     FloatingActionButton btnAdd;
     ArrayList<Transaction> TransactionList= new ArrayList<>();
+    static int balance;
+    NotificationManager mNotifyManager;
+
+    private BroadcastReceiver rc = new BroadcastReceiver() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            NotificationCompat.Builder mNotifyBuilder;
+            Log.d("receivenot", "run");
+            Log.d("Total : ", ((Integer) ListTransFragment.balance).toString());
+            if (ListTransFragment.balance < 0) {
+                Toast.makeText(context, "The requirement you entered exceeds the budget you have set.",
+                        Toast.LENGTH_LONG).show();
+
+                NotificationChannel mChannel = new NotificationChannel("idn", "fmcs",
+                        NotificationManager.IMPORTANCE_DEFAULT);
+
+                mNotifyBuilder = new NotificationCompat.Builder(context).setContentTitle("FMCS")
+                        .setContentText("REQUIREMENT EXCEEDS YOUR BUDGET.")
+                        .setSmallIcon(R.drawable.awarning)
+                        .setChannelId("idn");
+                if (SettingFragment.notif == true) {
+                    Notification myNotification = mNotifyBuilder.build();
+                    mNotifyManager.notify(0,  myNotification);
+                    mNotifyManager.createNotificationChannel(mChannel);
+                }
+            }
+        }
+    };
+
     public ListTransFragment() {
         // Required empty public constructor
     }
@@ -63,31 +105,61 @@ public class ListTransFragment extends Fragment implements View.OnClickListener 
             TransactionList = getArguments().getParcelableArrayList(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-    }
+        mNotifyManager = (NotificationManager)
+                getActivity().getSystemService(NOTIFICATION_SERVICE);
+        }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View ViewFrag = inflater.inflate(R.layout.fragment_list_trans, container, false);
-        int a=0;
+        int a=0, b=0;
+        Transaction temp;
         for (int i  =0;i<TransactionList.size();i++){
-            Transaction temp = TransactionList.get(i);
-            a += temp.money;
+             temp= TransactionList.get(i);
+            if (TransactionList.get(i).expenses== true){
+                a += temp.money;
+            }else {
+                b += temp.money;
+            }
         }
         expenses = ViewFrag.findViewById(R.id.textView5);
         expenses.setText(("Rp. "+ (Integer) a).toString());
         income = ViewFrag.findViewById(R.id.textView4);
-        income.setText("Rp. 0 ");
-        int temp = 0-a;
+        income.setText("Rp. "+ ((Integer) b).toString());
+        int tot = b-a;
+        balance = tot;
         total = ViewFrag.findViewById(R.id.textView6);
-        total.setText(("Rp. "+ (Integer) temp).toString());
+        total.setText(("Rp. "+ (Integer) tot).toString());
         mRecyclerView = ViewFrag.findViewById(R.id.RecyclerView);
         mAdapter = new TransactionAdapter(ViewFrag.getContext(), TransactionList);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(ViewFrag.getContext()));
         btnAdd = ViewFrag.findViewById(R.id.btnAdd);
         btnAdd.setOnClickListener(this);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            /**
+             * Callback method to be invoked when the RecyclerView has been scrolled. This will be
+             * called after the scroll has completed.
+             * <p>
+             * This callback will also be called if visible item range changes after a layout
+             * calculation. In that case, dx and dy will be 0.
+             *
+             * @param recyclerView The RecyclerView which scrolled.
+             * @param dx           The amount of horizontal scroll.
+             * @param dy           The amount of vertical scroll.
+             */
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && btnAdd.getVisibility() == View.VISIBLE) {
+                    btnAdd.hide();
+                } else if (dy < 0 && btnAdd.getVisibility() != View.VISIBLE) {
+                    btnAdd.show();
+                }
+            }
+        });
         return ViewFrag;
     }
 
@@ -99,24 +171,56 @@ public class ListTransFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d("request code : ", ((Integer) requestCode).toString());
-        String date, hour, content, category;
-        int amount =0;
-        Bundle bundle = data.getExtras();
-        date = bundle.getString("date");
-        hour = bundle.getString("hour");
-        content = bundle.getString("content");
-        category = bundle.getString("category");
         try{
+            super.onActivityResult(requestCode, resultCode, data);
+            Log.d("request code : ", ((Integer) requestCode).toString());
+            String date, hour, content, category;
+            int amount =0;
+
+            Bundle bundle = data.getExtras();
+            date = bundle.getString("date");
+            hour = bundle.getString("hour");
+            content = bundle.getString("content");
+            category = bundle.getString("category");
+            boolean expenses = bundle.getBoolean("expenses");
             amount = Integer.parseInt(bundle.getString("amount"));
-        }catch (Exception e){
+            TransactionList.add(new Transaction(content,category,date,hour,expenses,amount));
+            mAdapter.notifyDataSetChanged();
+
+            IntentFilter fl = new IntentFilter();
+            fl.addAction("com.cfsuman.RANDOM_NUMBER_INTENT");
+            getActivity().registerReceiver(rc, fl);
+            Intent in = new Intent();
+            in.setAction("com.cfsuman.RANDOM_NUMBER_INTENT");
+            in.putExtra("data", "The requirement you entered exceeds the budget you have set.");
+            Log.d("receivenot", "send");
+            getActivity().sendBroadcast(in);
+
+        }catch (NumberFormatException e){
+            String msg = "Field must not be empty!";
+            Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+        }catch (NullPointerException e){
 
         }
-        System.out.println(hour);
-        if (requestCode == 101){
-            TransactionList.add(new Transaction(content,category,date,hour,true,amount));
-            mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        int a=0, b=0;
+        Transaction temp;
+        for (int i  =0;i<TransactionList.size();i++){
+            temp= TransactionList.get(i);
+            if (TransactionList.get(i).expenses== true){
+                a += temp.money;
+            }else if (TransactionList.get(i).expenses == false){
+                b += temp.money;
+            }
         }
+        expenses.setText(("Rp. "+ (Integer) a).toString());
+        income.setText("Rp. "+ ((Integer) b).toString());
+        int tot = b-a;
+        balance = tot;
+        total.setText(("Rp. "+ (Integer) balance).toString());
     }
 }
